@@ -3,6 +3,7 @@
 namespace Ndinhbang\EloquentFilters\Pipes;
 
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Http\Request;
 use Ndinhbang\EloquentFilters\Concerns\HasColumn;
 
 /**
@@ -21,6 +22,17 @@ use Ndinhbang\EloquentFilters\Concerns\HasColumn;
 class FullText extends Base
 {
     use HasColumn;
+
+    public function __construct(
+        protected Request $request,
+        protected ?string $key,
+        protected array $columns = [],
+        protected ?string $prefix = null,
+        protected array   $ignores = [null, ''],
+    )
+    {
+        parent::__construct($request, $key, $prefix, $ignores);
+    }
     /**
      * see https://dev.mysql.com/doc/refman/8.0/en/fulltext-boolean.html
      */

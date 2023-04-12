@@ -10,14 +10,16 @@ class Relation extends Base
 {
     use HasColumn;
 
-    private string $relation;
-
-    /**
-     * @return array
-     */
-    public function getColumns(): array
+    public function __construct(
+        protected Request $request,
+        protected ?string $key,
+        protected string $relation,
+        protected array $columns = [],
+        protected ?string $prefix = null,
+        protected array   $ignores = [null, ''],
+    )
     {
-        return $this->columns ?? ((array)$this->key);
+        parent::__construct($request, $key, $prefix, $ignores);
     }
 
     protected function apply(BuilderContract $query): BuilderContract

@@ -4,8 +4,6 @@ namespace Ndinhbang\EloquentFilters\Concerns;
 
 trait HasColumn
 {
-    protected array $columns = [];
-
     /**
      * @return string|null
      */

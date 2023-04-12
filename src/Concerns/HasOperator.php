@@ -4,8 +4,6 @@ namespace Ndinhbang\EloquentFilters\Concerns;
 
 trait HasOperator
 {
-    protected ?string $operator = null;
-
     /**
      * @return string|null
      */

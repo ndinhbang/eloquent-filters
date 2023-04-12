@@ -2,24 +2,14 @@
 
 namespace Ndinhbang\EloquentFilters\Pipes;
 
-use Ndinhbang\EloquentFilters\Concerns\HasMultiColumn;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Ndinhbang\EloquentFilters\Concerns\HasColumn;
 
 class Relative extends Base
 {
-    use HasMultiColumn;
-
-    public function __construct(
-        Request $request,
-        string $paramKey)
-    {
-        parent::__construct($request);
-        // Initial props
-        $this->paramKey = $paramKey;
-    }
-
+    use HasColumn;
     /**
      * see https://dev.mysql.com/doc/refman/8.0/en/fulltext-boolean.html
      */
@@ -38,7 +28,7 @@ class Relative extends Base
         $search = $this->textWildcards($search);
 
         return $query->where(function ($query) use ($search) {
-            foreach ($this->columns() as $index => $column) {
+            foreach ($this->getColumns() as $index => $column) {
                 $query->when(
                     $index > 0,
                     fn($q) => $q->orWhere($column, 'like', $search),
