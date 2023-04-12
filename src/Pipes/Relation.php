@@ -3,37 +3,33 @@
 namespace Ndinhbang\EloquentFilters\Pipes;
 
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Illuminate\Http\Request;
 use Ndinhbang\EloquentFilters\Concerns\HasColumn;
+use Ndinhbang\EloquentFilters\Concerns\HasRelation;
 
 class Relation extends Base
 {
-    use HasColumn;
+    use HasColumn, HasRelation;
 
-    public function __construct(
-        protected Request $request,
-        protected ?string $key,
-        protected string $relation,
-        protected array $columns = [],
-        protected ?string $prefix = null,
-        protected array   $ignores = [null, ''],
-    )
+    public function shouldIgnore(): bool
     {
-        parent::__construct($request, $key, $prefix, $ignores);
+        if (!$this->relation) {
+            return true;
+        }
+
+        return parent::shouldIgnore();
     }
 
     protected function apply(BuilderContract $query): BuilderContract
     {
-        if (!$this->value()) {
+        if (empty($value = array_filter((array)$this->value()))) {
             return $query;
         }
 
-        $values = is_array($this->value())
-            ? $this->value()
-            : ($this->value() ? (array) $this->value() : []);
-
-        return $query->whereHas($this->relation, function ($query) use ($values) {
-            $query->whereIn($this->column(), $values);
-        });
+        return $query->whereHas(
+            $this->relation,
+            fn($query) => count($value) == 1
+                ? $query->where($this->field(), $value[0])
+                : $query->whereIn($this->field(), $value)
+        );
     }
 }

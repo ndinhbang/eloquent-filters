@@ -37,11 +37,27 @@ abstract class Base implements Pipe
      * @param string $prefix
      * @return $this
      */
-    public function setPrefix(string $prefix): static
+    public function prefix(string $prefix): static
     {
         $this->prefix = $prefix;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function field(): ?string
+    {
+        return !empty($fields = $this->fields()) ? $fields[0] : null;
+    }
+
+    /**
+     * @return array
+     */
+    public function fields(): array
+    {
+        return $this->columns ?? ((array) $this->key);
     }
 
     /**
@@ -58,13 +74,17 @@ abstract class Base implements Pipe
     /**
      * @return bool
      */
-    protected function shouldSkip(): bool
+    public function shouldIgnore(): bool
     {
-        if (!$this->request->has($this->accessor()) || in_array($this->value(), $this->ignores)) {
-            return true;
-        }
+        return in_array($this->value(), $this->ignores);
+    }
 
-        return false;
+    /**
+     * @return bool
+     */
+    public function shouldSkip(): bool
+    {
+        return !$this->request->has($this->accessor()) || $this->shouldIgnore();
     }
 
     /**

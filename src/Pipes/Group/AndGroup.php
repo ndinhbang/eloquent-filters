@@ -3,50 +3,31 @@
 namespace Ndinhbang\EloquentFilters\Pipes\Group;
 
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Ndinhbang\EloquentFilters\Contracts\Pipe;
+use Ndinhbang\EloquentFilters\Concerns\HasChildren;
 use Ndinhbang\EloquentFilters\Pipes\Base;
 
 class AndGroup extends Base
 {
-    /**
-     * @param Request $request
-     * @param string|null $key
-     * @param string|null $prefix
-     * @param array $children
-     */
-    public function __construct(
-        protected Request $request,
-        protected ?string $key,
-        protected ?string $prefix = null,
-        protected array   $children = [],
-    )
-    {
-        parent::__construct($request, $key, $prefix);
-    }
+    use HasChildren;
 
     /**
      * @return bool
      */
-    protected function shouldSkip(): bool
+    public function shouldIgnore(): bool
     {
-        if (!$this->request->has($this->accessor()) || empty($this->value())) {
-            return true;
-        }
-
-        return false;
+        return empty($this->value());
     }
 
     protected function apply(BuilderContract $query): BuilderContract
     {
-        return $query->where( function (BuilderContract $qr) {
+        return $query->where(function (BuilderContract $qr) {
             return app(\Chefhasteeth\Pipeline\Pipeline::class)
                 ->send($qr)
                 ->through(
                     Arr::map(
                         $this->children,
-                        fn (Pipe $pipe) => $pipe->setPrefix($this->prefix)
+                        fn(Base $pipe) => $pipe->prefix($this->prefix)
                     )
                 )
                 ->then(fn($passable) => $passable);

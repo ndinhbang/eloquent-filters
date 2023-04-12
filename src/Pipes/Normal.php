@@ -11,23 +11,11 @@ class Normal extends Base
 {
     use HasOperator, HasColumn;
 
-    public function __construct(
-        protected Request $request,
-        protected ?string $key,
-        protected ?string $operator = null,
-        protected array $columns = [],
-        protected ?string $prefix = null,
-        protected array   $ignores = [null, ''],
-    )
-    {
-        parent::__construct($request, $key, $prefix, $ignores);
-    }
-
     protected function apply(BuilderContract $query): BuilderContract
     {
-        if (!$this->operator) {
-            return $query->where($this->column(), $this->value());
+        if (empty($this->operator)) {
+            return $query->where($this->field(), $this->value());
         }
-        return $query->where($this->column(), $this->operator, $this->value());
+        return $query->where($this->field(), $this->operator, $this->value());
     }
 }

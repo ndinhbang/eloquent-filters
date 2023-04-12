@@ -23,16 +23,6 @@ class FullText extends Base
 {
     use HasColumn;
 
-    public function __construct(
-        protected Request $request,
-        protected ?string $key,
-        protected array $columns = [],
-        protected ?string $prefix = null,
-        protected array   $ignores = [null, ''],
-    )
-    {
-        parent::__construct($request, $key, $prefix, $ignores);
-    }
     /**
      * see https://dev.mysql.com/doc/refman/8.0/en/fulltext-boolean.html
      */
@@ -59,13 +49,12 @@ class FullText extends Base
 
     protected function apply(BuilderContract $query): BuilderContract
     {
-        $search = $this->fullTextWildcards($this->value());
-        if (!$search) {
+        if (empty($search = $this->fullTextWildcards($this->value()))) {
             return $query;
         }
 
         return $query->whereFullText(
-            $this->getColumns(),
+            $this->fields(),
             $search,
             [
                 'mode' => 'boolean', // IN BOOLEAN MODE
