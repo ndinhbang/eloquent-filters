@@ -3,8 +3,7 @@
 namespace Ndinhbang\EloquentFilters\Pipes;
 
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Ndinhbang\EloquentFilters\Concerns\HasMultiColumn;
-use Illuminate\Http\Request;
+use Ndinhbang\EloquentFilters\Concerns\HasColumn;
 
 /**
  * Make sure to set mysql config below, then run optimize table
@@ -21,17 +20,7 @@ use Illuminate\Http\Request;
  */
 class FullText extends Base
 {
-    use HasMultiColumn;
-
-    public function __construct(
-        Request $request,
-        string $paramKey)
-    {
-        parent::__construct($request);
-        // Initial props
-        $this->paramKey = $paramKey;
-    }
-
+    use HasColumn;
     /**
      * see https://dev.mysql.com/doc/refman/8.0/en/fulltext-boolean.html
      */
@@ -41,7 +30,7 @@ class FullText extends Base
         // removing symbols used by MySQL
         $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '.'];
         $term = str_replace($reservedSymbols, ' ', $term);
-        $term = preg_replace('/\s+/', ' ',$term);
+        $term = preg_replace('/\s+/', ' ', $term);
         $words = explode(' ', $term);
 
         $searchterms = [];
@@ -54,7 +43,6 @@ class FullText extends Base
         return !empty($searchterms)
             ? implode(' ', $searchterms)
             : '';
-
     }
 
     protected function apply(BuilderContract $query): BuilderContract
@@ -65,7 +53,7 @@ class FullText extends Base
         }
 
         return $query->whereFullText(
-            $this->columns(),
+            $this->getColumns(),
             $search,
             [
                 'mode' => 'boolean', // IN BOOLEAN MODE

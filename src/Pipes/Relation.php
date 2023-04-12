@@ -4,20 +4,20 @@ namespace Ndinhbang\EloquentFilters\Pipes;
 
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Http\Request;
+use Ndinhbang\EloquentFilters\Concerns\HasColumn;
 
 class Relation extends Base
 {
+    use HasColumn;
+
     private string $relation;
 
-    public function __construct(
-        Request $request,
-        string $paramKey,
-        string $relation)
+    /**
+     * @return array
+     */
+    public function getColumns(): array
     {
-        parent::__construct($request);
-        // Initial props
-        $this->paramKey = $paramKey;
-        $this->relation = $relation;
+        return $this->columns ?? ((array)$this->key);
     }
 
     protected function apply(BuilderContract $query): BuilderContract

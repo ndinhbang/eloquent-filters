@@ -2,19 +2,21 @@
 
 namespace Ndinhbang\EloquentFilters;
 
-use Chefhasteeth\Pipeline\Pipeline;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Http\Request;
 
 abstract class EloquentFilter
 {
-    protected Request $request;
-
-    public function __construct(Request $request)
+    public function __construct(
+        protected Request $request
+    )
     {
-        $this->request = $request;
+        //
     }
 
+    /**
+     * @return array
+     */
     abstract protected function getPipes(): array;
 
     /**
@@ -23,9 +25,9 @@ abstract class EloquentFilter
      */
     public function apply(BuilderContract $query): BuilderContract
     {
-        return app(Pipeline::class)
+        return app(\Chefhasteeth\Pipeline\Pipeline::class)
             ->send($query)
             ->through($this->getPipes())
-            ->thenReturn();
+            ->then(fn($passable) => $passable);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Ndinhbang\EloquentFilters\Concerns;
 
-trait HasColumn
+trait HasRelation
 {
     protected array $columns = [];
 

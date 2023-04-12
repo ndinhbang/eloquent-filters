@@ -6,13 +6,21 @@ trait HasOperator
 {
     protected ?string $operator = null;
 
-    public function operator(string $op = null): string|static
+    /**
+     * @return string|null
+     */
+    public function operator(): ?string
     {
-        if (is_null($op)) {
-            return $this->operator;
-        }
+        return $this->operator;
+    }
 
-        $this->operator = $op;
+    /**
+     * @param string $operator
+     * @return $this
+     */
+    public function setOperator(string $operator): static
+    {
+        $this->operator = $operator;
 
         return $this;
     }
