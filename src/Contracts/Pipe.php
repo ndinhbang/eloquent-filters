@@ -2,9 +2,9 @@
 
 namespace Ndinhbang\EloquentFilters\Contracts;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 
 interface Pipe
 {
-    public function handle(Builder $query): Builder;
+    public function handle(BuilderContract $query): BuilderContract;
 }

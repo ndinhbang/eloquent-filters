@@ -2,7 +2,7 @@
 
 namespace Ndinhbang\EloquentFilters\Pipes;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Http\Request;
 
 class Relation extends Base
@@ -20,7 +20,7 @@ class Relation extends Base
         $this->relation = $relation;
     }
 
-    protected function apply(Builder $query): Builder
+    protected function apply(BuilderContract $query): BuilderContract
     {
         if (!$this->value()) {
             return $query;

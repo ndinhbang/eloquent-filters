@@ -2,17 +2,17 @@
 
 namespace Ndinhbang\EloquentFilters\Concerns;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Ndinhbang\EloquentFilters\EloquentFilter;
 
 trait Filterable
 {
     /**
-     * @param Builder $builder
+     * @param BuilderContract $builder
      * @param EloquentFilter $filter
-     * @return Builder
+     * @return BuilderContract
      */
-    public function scopeFilter(Builder $builder, EloquentFilter $filter)
+    public function scopeFilter(BuilderContract $builder, EloquentFilter $filter)
     {
         return $filter->apply($builder);
     }

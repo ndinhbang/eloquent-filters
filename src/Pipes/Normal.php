@@ -4,7 +4,7 @@ namespace Ndinhbang\EloquentFilters\Pipes;
 
 use Ndinhbang\EloquentFilters\Concerns\HasColumn;
 use Ndinhbang\EloquentFilters\Concerns\HasOperator;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Http\Request;
 
 class Normal extends Base
@@ -21,7 +21,7 @@ class Normal extends Base
         $this->paramKey = $paramKey;
     }
 
-    protected function apply(Builder $query): Builder
+    protected function apply(BuilderContract $query): BuilderContract
     {
         if (!$this->operator) {
             return $query->where($this->column(), $this->value());

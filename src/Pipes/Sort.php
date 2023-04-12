@@ -2,7 +2,7 @@
 
 namespace Ndinhbang\EloquentFilters\Pipes;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Http\Request;
 
 class Sort extends Base
@@ -37,7 +37,7 @@ class Sort extends Base
         return $this;
     }
 
-    protected function apply(Builder $query): Builder
+    protected function apply(BuilderContract $query): BuilderContract
     {
         if (!$this->value()) {
             return $query->orderBy($this->defaultSortField, $this->defaultDirection);

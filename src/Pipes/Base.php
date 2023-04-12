@@ -2,7 +2,7 @@
 
 namespace Ndinhbang\EloquentFilters\Pipes;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Http\Request;
 
 abstract class Base
@@ -55,7 +55,7 @@ abstract class Base
         return $this;
     }
 
-    public function handle(Builder $query): Builder
+    public function handle(BuilderContract $query): BuilderContract
     {
         if ($this->shouldIgnore($this->paramKey)) {
             return $query;
@@ -69,6 +69,6 @@ abstract class Base
         return $this;
     }
 
-    abstract protected function apply(Builder $query): Builder;
+    abstract protected function apply(BuilderContract $query): BuilderContract;
 
 }

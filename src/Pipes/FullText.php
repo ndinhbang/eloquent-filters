@@ -2,8 +2,8 @@
 
 namespace Ndinhbang\EloquentFilters\Pipes;
 
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Ndinhbang\EloquentFilters\Concerns\HasMultiColumn;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 /**
@@ -57,7 +57,7 @@ class FullText extends Base
 
     }
 
-    protected function apply(Builder $query): Builder
+    protected function apply(BuilderContract $query): BuilderContract
     {
         $search = $this->fullTextWildcards($this->value());
         if (!$search) {

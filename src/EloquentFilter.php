@@ -3,7 +3,7 @@
 namespace Ndinhbang\EloquentFilters;
 
 use Chefhasteeth\Pipeline\Pipeline;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Http\Request;
 
 abstract class EloquentFilter
@@ -18,10 +18,10 @@ abstract class EloquentFilter
     abstract protected function getPipes(): array;
 
     /**
-     * @param Builder $query
-     * @return Builder
+     * @param BuilderContract $query
+     * @return BuilderContract
      */
-    public function apply(Builder $query): Builder
+    public function apply(BuilderContract $query): BuilderContract
     {
         return app(Pipeline::class)
             ->send($query)

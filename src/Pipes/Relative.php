@@ -3,7 +3,7 @@
 namespace Ndinhbang\EloquentFilters\Pipes;
 
 use Ndinhbang\EloquentFilters\Concerns\HasMultiColumn;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -28,7 +28,7 @@ class Relative extends Base
         return Str::ascii($term) . '%';
     }
 
-    protected function apply(Builder $query): Builder
+    protected function apply(BuilderContract $query): BuilderContract
     {
         $search = $this->value();
         if (!$search) {
