@@ -11,14 +11,6 @@ class AndGroup extends Base
 {
     use HasChildren;
 
-    /**
-     * @return bool
-     */
-    public function shouldIgnore(): bool
-    {
-        return empty($this->value());
-    }
-
     protected function apply(BuilderContract $query): BuilderContract
     {
         return $query->where(function (BuilderContract $qr) {

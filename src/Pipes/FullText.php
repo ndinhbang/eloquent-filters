@@ -3,7 +3,6 @@
 namespace Ndinhbang\EloquentFilters\Pipes;
 
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Illuminate\Http\Request;
 use Ndinhbang\EloquentFilters\Concerns\HasColumn;
 
 /**
@@ -28,7 +27,6 @@ class FullText extends Base
      */
     protected function fullTextWildcards(string $term): string
     {
-        $term = trim($term);
         // removing symbols used by MySQL
         $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '.'];
         $term = str_replace($reservedSymbols, ' ', $term);

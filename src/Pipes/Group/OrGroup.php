@@ -12,14 +12,6 @@ class OrGroup extends Base
 {
     use HasChildren;
 
-    /**
-     * @return bool
-     */
-    public function shouldIgnore(): bool
-    {
-        return empty($this->value());
-    }
-
     protected function apply(BuilderContract $query): BuilderContract
     {
         return $query->orWhere( function (BuilderContract $qr) {

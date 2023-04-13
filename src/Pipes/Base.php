@@ -74,17 +74,17 @@ abstract class Base implements Pipe
     /**
      * @return bool
      */
-    public function shouldIgnore(): bool
-    {
-        return in_array($this->value(), $this->ignores);
-    }
-
-    /**
-     * @return bool
-     */
     public function shouldSkip(): bool
     {
-        return !$this->request->has($this->accessor()) || $this->shouldIgnore();
+        if (empty($value = $this->value())) {
+            return true;
+        }
+
+        if (is_array($value)) {
+            return collect($value)->every( fn ($item) => in_array($value, $this->ignores));
+        }
+
+        return in_array($value, $this->ignores);
     }
 
     /**

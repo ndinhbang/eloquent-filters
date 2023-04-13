@@ -3,6 +3,7 @@
 namespace Ndinhbang\EloquentFilters\Pipes;
 
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Support\Str;
 use Ndinhbang\EloquentFilters\Concerns\HasColumn;
 use Ndinhbang\EloquentFilters\Concerns\HasRelation;
 
@@ -26,7 +27,7 @@ class Relation extends Base
         }
 
         return $query->whereHas(
-            $this->relation,
+            Str::camel($this->relation),
             fn($query) => count($value) == 1
                 ? $query->where($this->field(), $value[0])
                 : $query->whereIn($this->field(), $value)
