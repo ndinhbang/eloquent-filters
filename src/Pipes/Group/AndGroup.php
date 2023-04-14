@@ -11,7 +11,7 @@ class AndGroup extends Base
 {
     use HasChildren;
 
-    protected function apply(BuilderContract $query): BuilderContract
+    protected function apply(BuilderContract $query, string|array|int|float|bool|null $value): BuilderContract
     {
         return $query->where(function (BuilderContract $qr) {
             return app(\Chefhasteeth\Pipeline\Pipeline::class)

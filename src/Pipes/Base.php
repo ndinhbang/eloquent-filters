@@ -72,11 +72,12 @@ abstract class Base implements Pipe
     }
 
     /**
+     * @param string|array|int|float|bool|null $value
      * @return bool
      */
-    public function shouldSkip(): bool
+    public function shouldSkip(string|array|int|float|bool|null $value): bool
     {
-        if (empty($value = $this->value())) {
+        if (empty($value)) {
             return true;
         }
 
@@ -93,13 +94,13 @@ abstract class Base implements Pipe
      */
     public function handle(BuilderContract $query): BuilderContract
     {
-        if ($this->shouldSkip()) {
+        if ($this->shouldSkip($value = $this->value())) {
             return $query;
         }
 
-        return $this->apply($query);
+        return $this->apply($query, $value);
     }
 
-    abstract protected function apply(BuilderContract $query): BuilderContract;
+    abstract protected function apply(BuilderContract $query, string|array|int|float|bool|null $value): BuilderContract;
 
 }

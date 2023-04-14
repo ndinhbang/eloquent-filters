@@ -11,25 +11,21 @@ class Relation extends Base
 {
     use HasColumn, HasRelation;
 
-    public function shouldIgnore(): bool
+    public function shouldSkip(string|array|int|float|bool|null $value): bool
     {
         if (!$this->relation) {
             return true;
         }
 
-        return parent::shouldIgnore();
+        return parent::shouldSkip($value);
     }
 
-    protected function apply(BuilderContract $query): BuilderContract
+    protected function apply(BuilderContract $query, string|array|int|float|bool|null $value): BuilderContract
     {
-        if (empty($value = array_filter((array)$this->value()))) {
-            return $query;
-        }
-
         return $query->whereHas(
             Str::camel($this->relation),
-            fn($query) => count($value) == 1
-                ? $query->where($this->field(), $value[0])
+            fn($query) => (!is_array($value) || count($value) == 1)
+                ? $query->where($this->field(), $value)
                 : $query->whereIn($this->field(), $value)
         );
     }

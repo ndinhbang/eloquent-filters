@@ -37,7 +37,7 @@ class Sort extends Base
         return $this;
     }
 
-    protected function apply(BuilderContract $query): BuilderContract
+    protected function apply(BuilderContract $query, string|array|int|float|bool|null $value): BuilderContract
     {
         if (!$this->value()) {
             return $query->orderBy($this->defaultSortField, $this->defaultDirection);

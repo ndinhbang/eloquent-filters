@@ -45,9 +45,9 @@ class FullText extends Base
             : '';
     }
 
-    protected function apply(BuilderContract $query): BuilderContract
+    protected function apply(BuilderContract $query, string|array|int|float|bool|null $value): BuilderContract
     {
-        if (empty($search = $this->fullTextWildcards($this->value()))) {
+        if (empty($search = $this->fullTextWildcards($value))) {
             return $query;
         }
 

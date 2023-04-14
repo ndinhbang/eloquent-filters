@@ -18,10 +18,10 @@ class Relative extends Base
         return Str::ascii($term) . '%';
     }
 
-    protected function apply(BuilderContract $query): BuilderContract
+    protected function apply(BuilderContract $query, string|array|int|float|bool|null $value): BuilderContract
     {
         // wildcards
-        $search = $this->textWildcards($this->value());
+        $search = $this->textWildcards($value);
 
         return $query->where(function ($query) use ($search) {
             foreach ($this->fields() as $index => $column) {
