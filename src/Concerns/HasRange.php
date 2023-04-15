@@ -17,6 +17,15 @@ trait HasRange
     protected bool $includeEnd = true;
 
     /**
+     * @param string|array|int|float|bool|null $value
+     * @return bool
+     */
+    public function shouldSkip(string|array|int|float|bool|null $value): bool
+    {
+        return empty($value) || !is_array($value) || count($value) != 2 || $this->shouldIgnore($value);
+    }
+
+    /**
      * @return $this
      */
     public function dontIncludeStart(): static

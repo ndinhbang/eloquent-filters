@@ -57,7 +57,7 @@ abstract class Base implements Pipe
      */
     public function fields(): array
     {
-        return $this->columns ?? ((array) $this->key);
+        return $this->columns ?? ((array)$this->key);
     }
 
     /**
@@ -71,21 +71,18 @@ abstract class Base implements Pipe
         return $this;
     }
 
+    protected function shouldIgnore(string|array|int|float|bool|null $value): bool
+    {
+        return collect((array) $value)->every(fn($item) => in_array($item, $this->ignores));
+    }
+
     /**
      * @param string|array|int|float|bool|null $value
      * @return bool
      */
     public function shouldSkip(string|array|int|float|bool|null $value): bool
     {
-        if (empty($value)) {
-            return true;
-        }
-
-        if (is_array($value)) {
-            return collect($value)->every( fn ($item) => in_array($value, $this->ignores));
-        }
-
-        return in_array($value, $this->ignores);
+        return empty($value) || $this->shouldIgnore($value);
     }
 
     /**
