@@ -23,6 +23,10 @@ class Sort extends Base
         return $this;
     }
 
+    /**
+     * @param array $map
+     * @return $this
+     */
     protected function fieldMap(array $map): static
     {
         $this->fieldMap = $map;
@@ -30,7 +34,11 @@ class Sort extends Base
         return $this;
     }
 
-    protected function getFieldMap(string $field)
+    /**
+     * @param string $field
+     * @return string
+     */
+    protected function getFieldMap(string $field): string
     {
         return Arr::get($this->fieldMap, $field) ?? $field;
     }
