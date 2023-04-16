@@ -3,56 +3,54 @@
 namespace Ndinhbang\EloquentFilters\Pipes;
 
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 
 class Sort extends Base
 {
     protected string $defaultDirection = 'desc';
-    protected string $defaultSortField = 'id';
 
-    public function __construct(
-        Request $request,
-        string  $paramKey = 'sort'
-    )
-    {
-        parent::__construct($request);
-        // Initial props
-        $this->paramKey = $paramKey;
-    }
+    protected array $fieldMap = [];
 
-    protected function shouldIgnore(string $paramKey): bool
-    {
-        return false;
-    }
-
-    protected function direction($direction)
+    /**
+     * @param string $direction
+     * @return $this
+     */
+    protected function defaultDirection(string $direction): static
     {
         $this->defaultDirection = $direction;
+
         return $this;
     }
 
-    protected function field($field)
+    protected function fieldMap(array $map): static
     {
-        $this->defaultSortField = $field;
+        $this->fieldMap = $map;
+
         return $this;
+    }
+
+    protected function getFieldMap(string $field)
+    {
+        return Arr::get($this->fieldMap, $field) ?? $field;
+    }
+
+    /**
+     * @param string|array|int|float|bool|null $value
+     * @return bool
+     */
+    public function shouldSkip(string|array|int|float|bool|null $value): bool
+    {
+        return empty($value);
     }
 
     protected function apply(BuilderContract $query, string|array|int|float|bool|null $value): BuilderContract
     {
-        if (!$this->value()) {
-            return $query->orderBy($this->defaultSortField, $this->defaultDirection);
-        }
-
-        $values = is_array($this->value())
-            ? $this->value()
-            : ($this->value() ? (array)$this->value() : []);
-
-        foreach ($values as $field => $direction) {
-            if (is_numeric($field)) {
-                $query->orderBy($direction, $this->defaultDirection);
-            } else {
-                $query->orderBy($field, $direction);
-            }
+        foreach ($value as $field => $direction) {
+            $query->when(
+                is_string($this->getFieldMap($field)),
+                fn(Builder $q) => $q->orderBy($field, $direction ?? $this->defaultDirection)
+            );
         }
 
         return $query;
